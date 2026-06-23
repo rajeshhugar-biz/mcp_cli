@@ -61,5 +61,6 @@ async def main():
 
 if __name__ == "__main__":
     if sys.platform == "win32":
-        asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+        # Use SelectorEventLoop instead of ProactorEventLoop for better subprocess pipe handling
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     asyncio.run(main())

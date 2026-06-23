@@ -94,8 +94,13 @@ class MCPClient:
             return resource.text
 
     async def cleanup(self):
-        await self._exit_stack.aclose()
-        self._session = None
+        try:
+            await self._exit_stack.aclose()
+        except (ValueError, OSError, asyncio.CancelledError):
+            # Handle closed pipe and other I/O errors gracefully
+            pass
+        finally:
+            self._session = None
 
     async def __aenter__(self):
         await self.connect()
